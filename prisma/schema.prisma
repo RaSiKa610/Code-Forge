@@ -1,0 +1,314 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+// ─── AUTH ───────────────────────────────────────────────
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── USERS ──────────────────────────────────────────────
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Profile
+  username      String?   @unique
+  bio           String?
+  location      String?
+  website       String?
+  githubUsername String?
+  linkedinUrl   String?
+
+  // Rank & Score
+  rank          Rank      @default(BRONZE)
+  powerScore    Int       @default(0)
+  contestRating Int       @default(1200)
+
+  // Streak
+  currentStreak    Int      @default(0)
+  longestStreak    Int      @default(0)
+  lastActiveDate   DateTime?
+  streakFreezeTokens Int    @default(0)
+
+  // Economy
+  forgeCoins    Int       @default(0)
+  seasonPoints  Int       @default(0)
+
+  // Meta
+  role          UserRole  @default(USER)
+  isVerified    Boolean   @default(false)
+  openToWork    OpenToWork @default(NOT_LOOKING)
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  submissions   Submission[]
+  communityMemberships CommunityMember[]
+  sentBattles   Battle[]  @relation("BattleChallenger")
+  receivedBattles Battle[] @relation("BattleOpponent")
+  vaultNotes    VaultNote[]
+  streakLogs    StreakLog[]
+  achievements  UserAchievement[]
+}
+
+enum Rank {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+  MASTER
+  GRANDMASTER
+  LEGEND
+}
+
+enum UserRole {
+  USER
+  MENTOR
+  MODERATOR
+  ADMIN
+}
+
+enum OpenToWork {
+  NOT_LOOKING
+  PASSIVELY_OPEN
+  ACTIVELY_LOOKING
+}
+
+// ─── PROBLEMS ───────────────────────────────────────────
+model Problem {
+  id          String      @id @default(cuid())
+  number      Int         @unique
+  title       String
+  slug        String      @unique
+  description String      @db.Text
+  difficulty  Difficulty
+  acceptance  Float       @default(0)
+  frequency   Float       @default(0)
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+
+  tags        ProblemTag[]
+  submissions Submission[]
+  examples    ProblemExample[]
+  constraints String[]
+}
+
+model ProblemTag {
+  id        String  @id @default(cuid())
+  name      String
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+}
+
+model ProblemExample {
+  id          String  @id @default(cuid())
+  problemId   String
+  input       String  @db.Text
+  output      String  @db.Text
+  explanation String? @db.Text
+  problem     Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+// ─── SUBMISSIONS ────────────────────────────────────────
+model Submission {
+  id        String           @id @default(cuid())
+  userId    String
+  problemId String
+  code      String           @db.Text
+  language  Language
+  status    SubmissionStatus
+  runtime   Int?             // ms
+  memory    Int?             // KB
+  createdAt DateTime         @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([problemId, status])
+}
+
+enum Language {
+  PYTHON
+  CPP
+  JAVA
+  JAVASCRIPT
+  TYPESCRIPT
+  GO
+  RUST
+}
+
+enum SubmissionStatus {
+  ACCEPTED
+  WRONG_ANSWER
+  TIME_LIMIT
+  MEMORY_LIMIT
+  RUNTIME_ERROR
+  COMPILE_ERROR
+}
+
+// ─── STREAKS ────────────────────────────────────────────
+model StreakLog {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @db.Date
+  solved    Int      @default(0)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+// ─── BATTLES ────────────────────────────────────────────
+model Battle {
+  id           String       @id @default(cuid())
+  challengerId String
+  opponentId   String
+  problemId    String?
+  status       BattleStatus @default(PENDING)
+  difficulty   Difficulty   @default(MEDIUM)
+  language     Language?
+  timeLimit    Int          @default(30) // minutes
+  winnerId     String?
+  startedAt    DateTime?
+  endedAt      DateTime?
+  createdAt    DateTime     @default(now())
+
+  challenger User @relation("BattleChallenger", fields: [challengerId], references: [id])
+  opponent   User @relation("BattleOpponent",   fields: [opponentId],   references: [id])
+}
+
+enum BattleStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+// ─── COMMUNITIES ────────────────────────────────────────
+model Community {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?  @db.Text
+  emoji       String   @default("🌐")
+  category    String
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  members     CommunityMember[]
+}
+
+model CommunityMember {
+  id          String          @id @default(cuid())
+  userId      String
+  communityId String
+  role        CommunityRole   @default(MEMBER)
+  joinedAt    DateTime        @default(now())
+  points      Int             @default(0)
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, communityId])
+}
+
+enum CommunityRole {
+  MEMBER
+  MODERATOR
+  ADMIN
+  FOUNDER
+}
+
+// ─── KNOWLEDGE VAULT ────────────────────────────────────
+model VaultNote {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  pattern   String
+  lesson    String   @db.Text
+  mistake   String?  @db.Text
+  tags      String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ─── ACHIEVEMENTS ───────────────────────────────────────
+model Achievement {
+  id          String  @id @default(cuid())
+  key         String  @unique
+  name        String
+  description String
+  emoji       String
+  isRare      Boolean @default(false)
+  isLegendary Boolean @default(false)
+  category    String
+
+  users UserAchievement[]
+}
+
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String
+  achievementId String
+  earnedAt      DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+}
