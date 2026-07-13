@@ -1,7 +1,11 @@
-import { Clock } from "lucide-react";
+import {
+  ArrowUpRight,
+  Clock3,
+} from "lucide-react";
+
 import { DashboardCard } from "./DashboardCard";
 
-interface ActivityItem {
+interface Activity {
   id: string;
   title: string;
   reward: string;
@@ -9,7 +13,7 @@ interface ActivityItem {
 }
 
 interface RecentActivityProps {
-  activities: ActivityItem[];
+  activities: Activity[];
 }
 
 export function RecentActivity({
@@ -17,28 +21,49 @@ export function RecentActivity({
 }: RecentActivityProps) {
   return (
     <DashboardCard title="Recent Activity">
-      <div className="space-y-5">
+      <div className="space-y-4">
         {activities.map((activity) => (
           <div
             key={activity.id}
-            className="flex items-start gap-4"
+            className="
+              flex
+              items-start
+              justify-between
+              rounded-xl
+              border
+              border-[var(--border)]
+              bg-[var(--surface)]
+              p-4
+              transition-all
+              duration-200
+              hover:border-[var(--accent)]/40
+              hover:bg-[var(--card-hover)]
+            "
           >
-            <div className="mt-1 rounded-full bg-[var(--accent)] p-2">
-              <Clock size={14} className="text-white" />
-            </div>
-
             <div className="flex-1">
               <h3 className="font-medium text-[var(--text)]">
                 {activity.title}
               </h3>
 
-              <p className="text-sm text-[var(--muted)]">
-                {activity.reward}
-              </p>
-
-              <p className="mt-1 text-xs text-[var(--subtle)]">
+              <div className="mt-2 flex items-center gap-2 text-sm text-[var(--muted)]">
+                <Clock3 size={14} />
                 {activity.time}
-              </p>
+              </div>
+            </div>
+
+            <div className="text-right">
+              <div
+                className="
+                  flex
+                  items-center
+                  gap-1
+                  font-semibold
+                  text-emerald-400
+                "
+              >
+                <ArrowUpRight size={16} />
+                {activity.reward}
+              </div>
             </div>
           </div>
         ))}

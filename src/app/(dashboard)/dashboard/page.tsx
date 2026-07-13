@@ -2,9 +2,11 @@ import { auth } from "@/auth";
 import { getDashboardData } from "@/services/dashboard/getDashboardData";
 
 import {
-  DailyChallengeCard,
   ContinueLearningCard,
+  DailyChallengeCard,
   StatsCard,
+  WeeklyActivity,
+  RecentActivity,
 } from "@/components/dashboard";
 
 import { Flame, Coins, Trophy } from "lucide-react";
@@ -64,6 +66,19 @@ export default async function DashboardPage() {
           progress={dashboard.continueLearning.progress}
           estimatedTime={dashboard.continueLearning.estimatedTime}
         />
+      </section>
+      <section className="grid gap-6 xl:grid-cols-2">
+
+        <WeeklyActivity
+          solved={dashboard.weeklyActivity.solved}
+          hours={dashboard.weeklyActivity.hours}
+          activity={dashboard.weeklyActivity.activity}
+        />
+
+        <RecentActivity
+          activities={dashboard.recentActivity}
+        />
+
       </section>
     </div>
   );
