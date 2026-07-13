@@ -27,6 +27,13 @@ export interface DashboardData {
     hours: number;
     activity: number[];
   };
+
+  recentActivity: {
+    id: string;
+    title: string;
+    reward: string;
+    time: string;
+  }[];
 }
 
 export async function getDashboardData(
@@ -73,5 +80,25 @@ export async function getDashboardData(
         hours: 11,
         activity: [80, 60, 100, 40, 75, 90, 65],
     },
+    recentActivity: [
+      {
+        id: "1",
+        title: "Solved Two Sum",
+        reward: "+50 XP",
+        time: "2 min ago",
+      },
+      {
+        id: "2",
+        title: "Won a 1v1 Battle",
+        reward: "+120 XP",
+        time: "1 hour ago",
+      },
+      {
+        id: "3",
+        title: "Maintained 7-Day Streak",
+        reward: "+20 Forge Coins",
+        time: "Yesterday",
+      },
+    ],
   };
 }

@@ -23,18 +23,21 @@ export function StatsCard({
         p-5
         transition-all
         hover:border-violet-500/40
-        hover:shadow-lg
+        hover:-translate-y-1
+        hover:border-[var(--accent)]/30
+        hover:shadow-xl
+        duration-200
       "
     >
       <div className="flex items-center justify-between">
 
         <div>
 
-          <p className="text-sm text-zinc-400">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--subtle)]">
             {title}
           </p>
 
-          <h2 className="mt-2 text-3xl font-bold text-white">
+          <h2 className="mt-2 font-display text-4xl font-bold tracking-tight text-[var(--text)]">
             {value}
           </h2>
 
@@ -46,7 +49,18 @@ export function StatsCard({
 
         </div>
 
-        <div className="text-violet-400">
+        <div
+          className="
+            flex
+            h-14
+            w-14
+            items-center
+            justify-center
+            rounded-2xl
+            bg-[var(--accent)]/10
+            text-[var(--accent)]
+          "
+        >
           {icon}
         </div>
 

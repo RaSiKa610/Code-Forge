@@ -49,12 +49,6 @@ export const navigation: readonly NavigationItem[] = [
     icon: Users,
   },
   {
-    id: "profile",
-    label: "Profile",
-    href: "/profile",
-    icon: User,
-  },
-  {
     id: "settings",
     label: "Settings",
     href: "/settings",

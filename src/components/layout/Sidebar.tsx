@@ -1,11 +1,21 @@
 "use client";
 
-import { navigation } from "../../config/navigation";
+import { navigation } from "@/config/navigation";
 import { Logo } from "./Logo";
 import { SidebarItem } from "./SidebarItem";
 import { UserMenu } from "./UserMenu";
 
-export function Sidebar() {
+interface SidebarProps {
+  user: {
+    username: string | null;
+    rank: string;
+    image?: string | null;
+  };
+}
+
+export function Sidebar({
+  user,
+}: SidebarProps) {
   return (
     <aside
       className="
@@ -14,13 +24,13 @@ export function Sidebar() {
         w-72
         flex-col
         border-r
-        border-white/10
-        bg-[#18181B]
+        border-[var(--border)]
+        bg-[var(--surface)]
       "
     >
       {/* Logo */}
 
-      <div className="border-b border-white/10 p-6">
+      <div className="border-b border-[var(--border)] p-6">
         <Logo />
       </div>
 
@@ -37,8 +47,8 @@ export function Sidebar() {
 
       {/* User */}
 
-      <div className="border-t border-white/10 p-4">
-        <UserMenu />
+      <div className="border-t border-[var(--border)] p-4">
+        <UserMenu user={user} />
       </div>
     </aside>
   );

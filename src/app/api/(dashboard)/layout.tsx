@@ -1,15 +1,23 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
+
+import { auth } from "@/auth";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
-type Props = {
-  children: ReactNode;
-};
-
-export default function Layout({
+export default async function Layout({
   children,
-}: Props) {
+}: {
+  children: ReactNode;
+}) {
+  const session = await auth();
+
+  if (!session?.user) {
+    return null;
+  }
+
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      user={session.user}
+    >
       {children}
     </DashboardLayout>
   );

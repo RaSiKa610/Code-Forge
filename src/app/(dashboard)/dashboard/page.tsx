@@ -2,19 +2,12 @@ import { auth } from "@/auth";
 import { getDashboardData } from "@/services/dashboard/getDashboardData";
 
 import {
-    ContinueCard,
-    DailyChallengeCard,
-    StatsCard,
-    WeeklyActivity,
+  DailyChallengeCard,
+  ContinueLearningCard,
+  StatsCard,
 } from "@/components/dashboard";
 
-import { PageHeader } from "@/components/ui";
-
-import {
-  Coins,
-  Flame,
-  Trophy,
-} from "lucide-react";
+import { Flame, Coins, Trophy } from "lucide-react";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -29,32 +22,27 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        title={`Welcome back, ${session.user.username}!`}
-        description="Let's forge your coding destiny today."
-      />
-
       {/* Stats */}
 
       <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         <StatsCard
           title="Current Streak"
           value={dashboard.user.currentStreak}
-          subtitle="days"
+          subtitle="Days"
           icon={<Flame size={28} />}
         />
 
         <StatsCard
           title="Forge Coins"
           value={dashboard.user.forgeCoins}
-          subtitle="earned"
+          subtitle="Available"
           icon={<Coins size={28} />}
         />
 
         <StatsCard
-          title="Rank"
+          title="Current Rank"
           value={dashboard.user.rank}
-          subtitle="Current Rank"
+          subtitle="Keep climbing!"
           icon={<Trophy size={28} />}
         />
       </section>
@@ -63,15 +51,19 @@ export default async function DashboardPage() {
 
       <section className="grid gap-6 xl:grid-cols-2">
         <DailyChallengeCard
-            {...dashboard.dailyChallenge}
-        />
-        <ContinueCard
-            {...dashboard.continueLearning}
-        />
-        <WeeklyActivity
-            {...dashboard.weeklyActivity}
+          title={dashboard.dailyChallenge.title}
+          difficulty={dashboard.dailyChallenge.difficulty}
+          xp={dashboard.dailyChallenge.xp}
+          forgeCoins={dashboard.dailyChallenge.forgeCoins}
+          estimatedTime={dashboard.dailyChallenge.estimatedTime}
         />
 
+        <ContinueLearningCard
+          title={dashboard.continueLearning.title}
+          difficulty={dashboard.continueLearning.difficulty}
+          progress={dashboard.continueLearning.progress}
+          estimatedTime={dashboard.continueLearning.estimatedTime}
+        />
       </section>
     </div>
   );

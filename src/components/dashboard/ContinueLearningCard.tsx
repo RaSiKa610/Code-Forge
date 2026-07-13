@@ -1,7 +1,9 @@
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Clock3 } from "lucide-react";
+
 import { DashboardCard } from "./DashboardCard";
 
-interface ContinueCardProps {
+interface ContinueLearningCardProps {
   title: string;
   difficulty: "Easy" | "Medium" | "Hard";
   progress: number;
@@ -9,20 +11,22 @@ interface ContinueCardProps {
 }
 
 const difficultyColors = {
-  Easy: "bg-green-500/10 text-green-400",
+  Easy: "bg-emerald-500/10 text-emerald-400",
   Medium: "bg-yellow-500/10 text-yellow-400",
   Hard: "bg-red-500/10 text-red-400",
 };
 
-export function ContinueCard({
+export function ContinueLearningCard({
   title,
   difficulty,
   progress,
   estimatedTime,
-}: ContinueCardProps) {
+}: ContinueLearningCardProps) {
   return (
-    <DashboardCard title="Continue Solving">
+    <DashboardCard title="Continue Learning">
       <div className="space-y-5">
+        {/* Problem */}
+
         <div>
           <h3 className="text-lg font-semibold text-[var(--text)]">
             {title}
@@ -35,20 +39,28 @@ export function ContinueCard({
           </span>
         </div>
 
+        {/* Progress */}
+
         <div>
-          <div className="mb-2 flex justify-between text-sm">
+          <div className="mb-2 flex items-center justify-between text-sm">
             <span className="text-[var(--muted)]">
               Progress
             </span>
 
-            <span className="text-[var(--text)]">
+            <span className="font-medium text-[var(--text)]">
               {progress}%
             </span>
           </div>
 
-          <div className="h-2 rounded-full bg-[var(--surface)]">
+          <div className="h-2 overflow-hidden rounded-full bg-[var(--surface)]">
             <div
-              className="h-2 rounded-full rounded-full bg-[var(--accent)] transition-all duration-500"
+              className="
+                h-full
+                rounded-full
+                bg-[var(--accent)]
+                transition-all
+                duration-500
+              "
               style={{
                 width: `${progress}%`,
               }}
@@ -56,11 +68,18 @@ export function ContinueCard({
           </div>
         </div>
 
-        <p className="text-sm text-[var(--muted)]">
-          Estimated remaining time: {estimatedTime}
-        </p>
+        {/* Time */}
 
-        <button
+        <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
+          <Clock3 size={16} />
+
+          <span>{estimatedTime} remaining</span>
+        </div>
+
+        {/* Button */}
+
+        <Link
+          href="/problems"
           className="
             flex
             w-full
@@ -79,8 +98,9 @@ export function ContinueCard({
           "
         >
           Continue
+
           <ArrowRight size={18} />
-        </button>
+        </Link>
       </div>
     </DashboardCard>
   );
