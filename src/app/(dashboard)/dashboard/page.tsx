@@ -1,7 +1,13 @@
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { getDashboardData } from "@/services/dashboard/getDashboardData";
+
 import {
   DailyChallengeCard,
   StatsCard,
 } from "@/components/dashboard";
+
+import { PageHeader } from "@/components/ui";
 
 import {
   Coins,
@@ -9,59 +15,63 @@ import {
   Trophy,
 } from "lucide-react";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await auth();
+
+  if (!session?.user) {
+    return null;
+  }
+
+  const dashboard = await getDashboardData(
+    prisma,
+    session.user.id
+  );
+
   return (
     <div className="space-y-8">
-
-      {/* Greeting */}
-
-      <div>
-
-        <h1 className="text-4xl font-bold text-white">
-          Good Evening, Rasika 👋
-        </h1>
-
-        <p className="mt-2 text-zinc-400">
-          Ready to continue your coding journey?
-        </p>
-
-      </div>
+      <PageHeader
+        title={`Welcome back, ${session.user.username}!`}
+        description="Let's forge your coding destiny today."
+      />
 
       {/* Stats */}
 
-      <div className="grid gap-5 md:grid-cols-3">
-
+      <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         <StatsCard
           title="Current Streak"
-          value="412"
+          value={dashboard.currentStreak}
           subtitle="days"
           icon={<Flame size={28} />}
         />
 
         <StatsCard
           title="Forge Coins"
-          value="2,480"
+          value={dashboard.forgeCoins}
+          subtitle="earned"
           icon={<Coins size={28} />}
         />
 
         <StatsCard
           title="Rank"
-          value="Diamond II"
+          value={dashboard.rank}
+          subtitle="Current Rank"
           icon={<Trophy size={28} />}
         />
+      </section>
 
-      </div>
+      {/* Main Content */}
 
-      {/* Daily Challenge */}
+      <section className="grid gap-6 xl:grid-cols-2">
+        <DailyChallengeCard
+          title="Binary Search"
+          difficulty="Medium"
+          xp={80}
+          forgeCoins={25}
+          estimatedTime="18 min"
+        />
 
-      <DailyChallengeCard
-        title="Binary Search"
-        difficulty="Medium"
-        xp={80}
-        forgeCoins={25}
-        estimatedTime="18 min"
-      />
-
+        {/* ContinueCard will go here */}
+      </section>
     </div>
   );
 }
