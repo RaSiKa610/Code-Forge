@@ -2,33 +2,44 @@
 
 :root {
 
+  /* Background */
+
   --background: #0D1117;
 
   --surface: #161B22;
 
   --card: #1C2128;
 
-  --elevated: #22272E;
+  --card-hover: #22272E;
 
-  --border: #30363D;
+  /* Text */
 
   --text: #F8FAFC;
 
   --muted: #94A3B8;
 
+  --subtle: #64748B;
+
+  /* Border */
+
+  --border: #30363D;
+
+  /* Accent */
+
   --accent: #7C5CFC;
 
   --accent-hover: #8B72FF;
 
-  --green: #22C55E;
+  /* Status */
 
-  --yellow: #FBBF24;
+  --success: #22C55E;
 
-  --orange: #F97316;
+  --warning: #FBBF24;
 
-  --red: #EF4444;
+  --danger: #EF4444;
 
-  --blue: #60A5FA;
+  --info: #60A5FA;
+
 }
 
 @theme inline {

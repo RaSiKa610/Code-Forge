@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export interface DashboardData {
   user: {
@@ -15,16 +15,21 @@ export interface DashboardData {
     estimatedTime: string;
   };
 
-  continueProblem: {
+  continueLearning: {
     title: string;
     difficulty: "Easy" | "Medium" | "Hard";
     progress: number;
     estimatedTime: string;
   };
+
+  weeklyActivity: {
+    solved: number;
+    hours: number;
+    activity: number[];
+  };
 }
 
 export async function getDashboardData(
-  prisma: PrismaClient,
   userId: string
 ): Promise<DashboardData> {
   const user = await prisma.user.findUnique({
@@ -57,11 +62,16 @@ export async function getDashboardData(
         estimatedTime: "18 min",
     },
 
-    continueProblem: {
+    continueLearning: {
         title: "Binary Tree Maximum Path Sum",
         difficulty: "Hard",
         progress: 63,
         estimatedTime: "21 min",
     },
-    };
+    weeklyActivity: {
+        solved: 14,
+        hours: 11,
+        activity: [80, 60, 100, 40, 75, 90, 65],
+    },
+  };
 }

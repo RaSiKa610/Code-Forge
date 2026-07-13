@@ -1,10 +1,11 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { getDashboardData } from "@/services/dashboard/getDashboardData";
 
 import {
-  DailyChallengeCard,
-  StatsCard,
+    ContinueCard,
+    DailyChallengeCard,
+    StatsCard,
+    WeeklyActivity,
 } from "@/components/dashboard";
 
 import { PageHeader } from "@/components/ui";
@@ -23,7 +24,6 @@ export default async function DashboardPage() {
   }
 
   const dashboard = await getDashboardData(
-    prisma,
     session.user.id
   );
 
@@ -39,21 +39,21 @@ export default async function DashboardPage() {
       <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         <StatsCard
           title="Current Streak"
-          value={dashboard.currentStreak}
+          value={dashboard.user.currentStreak}
           subtitle="days"
           icon={<Flame size={28} />}
         />
 
         <StatsCard
           title="Forge Coins"
-          value={dashboard.forgeCoins}
+          value={dashboard.user.forgeCoins}
           subtitle="earned"
           icon={<Coins size={28} />}
         />
 
         <StatsCard
           title="Rank"
-          value={dashboard.rank}
+          value={dashboard.user.rank}
           subtitle="Current Rank"
           icon={<Trophy size={28} />}
         />
@@ -63,14 +63,15 @@ export default async function DashboardPage() {
 
       <section className="grid gap-6 xl:grid-cols-2">
         <DailyChallengeCard
-          title="Binary Search"
-          difficulty="Medium"
-          xp={80}
-          forgeCoins={25}
-          estimatedTime="18 min"
+            {...dashboard.dailyChallenge}
+        />
+        <ContinueCard
+            {...dashboard.continueLearning}
+        />
+        <WeeklyActivity
+            {...dashboard.weeklyActivity}
         />
 
-        {/* ContinueCard will go here */}
       </section>
     </div>
   );
