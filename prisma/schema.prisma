@@ -57,6 +57,8 @@ model User {
   // Profile
   username      String?   @unique
   bio           String?
+  headline      String?
+  bannerImage   String?
   location      String?
   website       String?
   githubUsername String?
