@@ -8,16 +8,11 @@ export default function SettingsProfilePage() {
 
   useEffect(() => {
     async function load() {
-      const session = await fetch("/api/auth/session").then((res) =>
-        res.json()
-      );
-
-      if (!session?.user?.username) {
-        return;
-      }
+      // Mock session username for local testing
+      const username = "sujal_maurya";
 
       const data = await fetch(
-        `/api/profile/${session.user.username}`
+        `/api/profile/${username}`
       ).then((res) => res.json());
 
       setProfile(data);
