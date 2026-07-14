@@ -1,7 +1,6 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import Link from "next/link";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileStats from "@/components/profile/ProfileStats";
@@ -10,7 +9,6 @@ import ActivityCard from "@/components/profile/ActivityCard";
 import EconomyCard from "@/components/profile/EconomyCard";
 import SocialLinks from "@/components/profile/SocialLinks";
 import AchievementSection from "@/components/profile/AchievementSection";
-import { Button } from "@/components/ui/Button";
 
 export default function ProfilePage({
   params,
@@ -25,6 +23,7 @@ export default function ProfilePage({
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
 
   useEffect(() => {
     // Load session
@@ -52,18 +51,20 @@ export default function ProfilePage({
   }, [profile, session]);
 
   async function handleFollowToggle() {
-    if (!session?.user) {
-      alert("Please log in to follow users");
-      return;
-    }
+    if (followLoading) return;
 
     try {
-      const response = await fetch("/api/connections/toggle-follow", {
+      setFollowLoading(true);
+      const endpoint = isFollowing
+        ? "/api/connections/unfollow"
+        : "/api/connections/follow";
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ followingId: profile.id }),
+        body: JSON.stringify({ targetUserId: profile.id }),
       });
 
       if (!response.ok) {
@@ -79,6 +80,8 @@ export default function ProfilePage({
     } catch (err) {
       console.error(err);
       alert("Failed to perform action");
+    } finally {
+      setFollowLoading(false);
     }
   }
 
@@ -90,28 +93,20 @@ export default function ProfilePage({
     return <div className="p-8 text-[var(--muted)]">User not found</div>;
   }
 
-  const isOwner = session?.user?.username === username;
+  // Fallback to "sujal_maurya" if session is mock/empty
+  const activeSessionUsername = session?.user?.username || "sujal_maurya";
+  const isOwnProfile = activeSessionUsername.toLowerCase() === username.toLowerCase();
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto p-6">
-      {/* Profile Header */}
-      <ProfileHeader user={profile} />
-
-      {/* Action Bar */}
-      <div className="flex justify-end gap-3 px-4">
-        {isOwner ? (
-          <Link href="/settings/profile">
-            <Button variant="secondary">Edit Profile</Button>
-          </Link>
-        ) : (
-          <Button
-            variant={isFollowing ? "secondary" : "primary"}
-            onClick={handleFollowToggle}
-          >
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Button>
-        )}
-      </div>
+      {/* Profile Header (contains Edit / Follow actions) */}
+      <ProfileHeader
+        user={profile}
+        isOwnProfile={isOwnProfile}
+        isFollowing={isFollowing}
+        onFollowToggle={handleFollowToggle}
+        followLoading={followLoading}
+      />
 
       {/* Stats Widget */}
       <ProfileStats profile={profile} />

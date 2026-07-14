@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -61,7 +62,10 @@ export default function UserCard({
 
   return (
     <Card className="flex items-center justify-between">
-      <div className="flex items-center gap-4">
+      <Link
+        href={`/profile/${username}`}
+        className="flex items-center gap-4 hover:opacity-80 transition-opacity"
+      >
         <Image
           src={profileImage}
           alt={username}
@@ -76,7 +80,7 @@ export default function UserCard({
             @{username}
           </p>
         </div>
-      </div>
+      </Link>
 
       <Button
         variant={
