@@ -1,4 +1,10 @@
-import { ArrowRight, Coins, Flame } from "lucide-react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Clock3,
+  Coins,
+  Flame,
+} from "lucide-react";
 
 import { DashboardCard } from "./DashboardCard";
 
@@ -11,9 +17,9 @@ interface DailyChallengeCardProps {
 }
 
 const difficultyColors = {
-  Easy: "text-green-400 bg-green-400/10",
-  Medium: "text-yellow-400 bg-yellow-400/10",
-  Hard: "text-red-400 bg-red-400/10",
+  Easy: "bg-emerald-500/10 text-emerald-400",
+  Medium: "bg-yellow-500/10 text-yellow-400",
+  Hard: "bg-red-500/10 text-red-400",
 };
 
 export function DailyChallengeCard({
@@ -24,40 +30,54 @@ export function DailyChallengeCard({
   estimatedTime,
 }: DailyChallengeCardProps) {
   return (
-    <DashboardCard title="🎯 Daily Challenge">
-      <div className="space-y-5">
+    <DashboardCard title="🔥 Daily Challenge">
+      <div className="space-y-6">
 
         <div>
-          <h3 className="text-xl font-semibold text-white">
+          <h2 className="text-2xl font-bold text-[var(--text)]">
             {title}
-          </h3>
+          </h2>
 
           <span
-            className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-semibold ${difficultyColors[difficulty]}`}
+            className={`mt-3 inline-flex rounded-full px-3 py-1 text-xs font-medium ${difficultyColors[difficulty]}`}
           >
             {difficulty}
           </span>
         </div>
 
-        <div className="flex gap-6 text-sm text-zinc-400">
+        <div className="grid grid-cols-2 gap-4">
 
-          <div className="flex items-center gap-2">
-            <Flame size={16} />
-            {xp} XP
+          <div className="rounded-xl bg-[var(--surface)] p-4">
+            <div className="flex items-center gap-2 text-[var(--accent)]">
+              <Flame size={18} />
+              <span className="text-sm font-medium">XP</span>
+            </div>
+
+            <p className="mt-2 text-2xl font-bold text-[var(--text)]">
+              {xp}
+            </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Coins size={16} />
-            {forgeCoins} Coins
+          <div className="rounded-xl bg-[var(--surface)] p-4">
+            <div className="flex items-center gap-2 text-yellow-400">
+              <Coins size={18} />
+              <span className="text-sm font-medium">Coins</span>
+            </div>
+
+            <p className="mt-2 text-2xl font-bold text-[var(--text)]">
+              {forgeCoins}
+            </p>
           </div>
 
         </div>
 
-        <p className="text-sm text-zinc-500">
-          Estimated Time: {estimatedTime}
-        </p>
+        <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
+          <Clock3 size={16} />
+          <span>{estimatedTime}</span>
+        </div>
 
-        <button
+        <Link
+          href="/problems"
           className="
             flex
             w-full
@@ -65,18 +85,20 @@ export function DailyChallengeCard({
             justify-center
             gap-2
             rounded-xl
-            bg-violet-600
+            bg-[var(--accent)]
             py-3
             font-medium
             text-white
-            transition
-            hover:bg-violet-500
+            transition-all
+            duration-200
+            hover:-translate-y-0.5
+            hover:bg-[var(--accent-hover)]
           "
         >
-          Solve Challenge
+          Start Challenge
 
           <ArrowRight size={18} />
-        </button>
+        </Link>
 
       </div>
     </DashboardCard>

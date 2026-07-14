@@ -1,4 +1,7 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { motion } from "framer-motion";
 
 interface DashboardCardProps {
   title: string;
@@ -12,22 +15,65 @@ export function DashboardCard({
   className = "",
 }: DashboardCardProps) {
   return (
-    <section
+    <motion.section
+      initial={{
+        opacity: 0,
+        y: 20,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      transition={{
+        duration: 0.4,
+        ease: "easeOut",
+      }}
       className={`
-        rounded-2xl
+        group
+        rounded-3xl
         border
-        border-white/10
-        bg-[#18181B]
+        border-[var(--border)]
+        bg-[var(--card)]
         p-6
         shadow-lg
+        transition-all
+        duration-300
+        hover:-translate-y-1
+        hover:border-[var(--accent)]/40
+        hover:shadow-2xl
         ${className}
       `}
     >
-      <h3 className="mb-5 text-lg font-semibold text-white">
-        {title}
-      </h3>
+      {/* Header */}
 
-      {children}
-    </section>
+      <div className="mb-6 flex items-center justify-between">
+        <h3
+          className="
+            text-xs
+            font-semibold
+            uppercase
+            tracking-[0.2em]
+            text-[var(--muted)]
+          "
+        >
+          {title}
+        </h3>
+
+        <div
+          className="
+            ml-4
+            h-px
+            flex-1
+            bg-gradient-to-r
+            from-[var(--border)]
+            to-transparent
+          "
+        />
+      </div>
+
+      {/* Content */}
+
+      <div>{children}</div>
+    </motion.section>
   );
 }

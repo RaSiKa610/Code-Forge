@@ -30,7 +30,7 @@ export function Sidebar({
     >
       {/* Logo */}
 
-      <div className="border-b border-[var(--border)] p-6">
+      <div className="border-b border-[var(--border)] p-5">
         <Logo />
       </div>
 

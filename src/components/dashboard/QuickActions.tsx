@@ -2,8 +2,9 @@ import Link from "next/link";
 
 import {
   ArrowRight,
-  Shuffle,
+  Dice5,
   Swords,
+  Users,
   User,
 } from "lucide-react";
 
@@ -12,18 +13,25 @@ import { DashboardCard } from "./DashboardCard";
 const actions = [
   {
     title: "Random Problem",
+    description: "Practice something new",
     href: "/problems/random",
-    icon: Shuffle,
+    icon: Dice5,
   },
-
   {
-    title: "Find Battle",
+    title: "Start Battle",
+    description: "Challenge another coder",
     href: "/battles",
     icon: Swords,
   },
-
   {
-    title: "Profile",
+    title: "Communities",
+    description: "Learn together",
+    href: "/communities",
+    icon: Users,
+  },
+  {
+    title: "View Profile",
+    description: "Track your journey",
     href: "/profile",
     icon: User,
   },
@@ -32,50 +40,71 @@ const actions = [
 export function QuickActions() {
   return (
     <DashboardCard title="Quick Actions">
-
       <div className="space-y-3">
-
         {actions.map((action) => {
-
           const Icon = action.icon;
 
           return (
-
             <Link
               key={action.title}
               href={action.href}
               className="
+                group
                 flex
                 items-center
                 justify-between
                 rounded-xl
                 border
-                border-white/10
+                border-[var(--border)]
+                bg-[var(--surface)]
                 p-4
                 transition-all
-                hover:border-[var(--accent)]
-                hover:bg-[var(--surface)]
+                duration-200
+                hover:-translate-y-1
+                hover:border-[var(--accent)]/40
+                hover:bg-[var(--card-hover)]
               "
             >
+              <div className="flex items-center gap-4">
+                <div
+                  className="
+                    rounded-xl
+                    bg-[var(--accent)]/10
+                    p-3
+                    text-[var(--accent)]
+                    transition-all
+                    duration-200
+                    group-hover:bg-[var(--accent)]
+                    group-hover:text-white
+                  "
+                >
+                  <Icon size={20} />
+                </div>
 
-              <div className="flex items-center gap-3">
+                <div>
+                  <h3 className="font-semibold text-[var(--text)]">
+                    {action.title}
+                  </h3>
 
-                <Icon size={20} />
-
-                <span>{action.title}</span>
-
+                  <p className="text-sm text-[var(--muted)]">
+                    {action.description}
+                  </p>
+                </div>
               </div>
 
-              <ArrowRight size={18} />
-
+              <ArrowRight
+                size={18}
+                className="
+                  text-[var(--muted)]
+                  transition-transform
+                  duration-200
+                  group-hover:translate-x-1
+                "
+              />
             </Link>
-
           );
-
         })}
-
       </div>
-
     </DashboardCard>
   );
 }

@@ -1,4 +1,5 @@
 import { DashboardCard } from "./DashboardCard";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 
 interface WeeklyActivityProps {
   solved: number;
@@ -16,62 +17,77 @@ export function WeeklyActivity({
   return (
     <DashboardCard title="Weekly Activity">
       <div className="space-y-6">
+        {/* Activity Graph */}
 
-        {/* Graph */}
-
-        <div className="flex items-end justify-between gap-3 h-44">
+        <div className="flex h-44 items-end justify-between gap-3">
           {activity.map((value, index) => (
             <div
               key={days[index]}
-              className="flex flex-col items-center flex-1"
+              className="flex flex-1 flex-col items-center"
             >
               <div
                 className="
                   w-full
                   rounded-xl
-                  bg-[var(--accent)]
+                  bg-gradient-to-t
+                  from-[var(--accent)]
+                  to-violet-400
                   transition-all
                   duration-700
-                  hover:bg-[var(--accent-hover)]
+                  hover:scale-105
+                  hover:brightness-110
                 "
                 style={{
                   height: `${value}%`,
                 }}
               />
 
-              <span className="mt-3 text-xs text-[var(--muted)]">
+              <span className="mt-3 text-xs font-medium text-[var(--muted)]">
                 {days[index]}
               </span>
             </div>
           ))}
         </div>
 
-        {/* Summary */}
+        {/* Stats */}
 
         <div className="grid grid-cols-2 gap-4">
-
-          <div className="rounded-xl bg-[var(--surface)] p-4">
-            <p className="text-xs text-[var(--muted)]">
+          <div
+            className="
+              rounded-2xl
+              border
+              border-[var(--border)]
+              bg-[var(--surface)]
+              p-4
+            "
+          >
+            <p className="text-xs uppercase tracking-wider text-[var(--muted)]">
               Problems Solved
             </p>
 
-            <h3 className="mt-1 text-2xl font-bold text-[var(--text)]">
-              {solved}
+            <h3 className="mt-2 text-3xl font-bold text-[var(--text)]">
+              <AnimatedNumber value={solved} />
             </h3>
           </div>
 
-          <div className="rounded-xl bg-[var(--surface)] p-4">
-            <p className="text-xs text-[var(--muted)]">
+          <div
+            className="
+              rounded-2xl
+              border
+              border-[var(--border)]
+              bg-[var(--surface)]
+              p-4
+            "
+          >
+            <p className="text-xs uppercase tracking-wider text-[var(--muted)]">
               Coding Hours
             </p>
 
-            <h3 className="mt-1 text-2xl font-bold text-[var(--text)]">
-              {hours}h
+            <h3 className="mt-2 text-3xl font-bold text-[var(--text)]">
+              <AnimatedNumber value={hours} />h
             </h3>
           </div>
-
         </div>
-
       </div>
     </DashboardCard>
   );

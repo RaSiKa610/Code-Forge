@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 
 interface StatsCardProps {
   title: string;
@@ -16,38 +17,60 @@ export function StatsCard({
   return (
     <div
       className="
+        group
         rounded-2xl
         border
-        border-white/10
-        bg-[#18181B]
-        p-5
+        border-[var(--border)]
+        bg-[var(--card)]
+        p-6
         transition-all
-        hover:border-violet-500/40
+        duration-300
         hover:-translate-y-1
-        hover:border-[var(--accent)]/30
-        hover:shadow-xl
-        duration-200
+        hover:border-[var(--accent)]/40
+        hover:shadow-2xl
       "
     >
       <div className="flex items-center justify-between">
+        {/* Left */}
 
         <div>
-
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--subtle)]">
+          <p
+            className="
+              text-xs
+              font-semibold
+              uppercase
+              tracking-[0.2em]
+              text-[var(--muted)]
+            "
+          >
             {title}
           </p>
 
-          <h2 className="mt-2 font-display text-4xl font-bold tracking-tight text-[var(--text)]">
-            {value}
+          <h2
+            className="
+              mt-3
+              font-display
+              text-4xl
+              font-bold
+              tracking-tight
+              text-[var(--text)]
+            "
+          >
+            {typeof value === "number" ? (
+                <AnimatedNumber value={value} />
+            ) : (
+                value
+            )}
           </h2>
 
           {subtitle && (
-            <p className="mt-1 text-xs text-zinc-500">
+            <p className="mt-2 text-sm text-[var(--subtle)]">
               {subtitle}
             </p>
           )}
-
         </div>
+
+        {/* Right */}
 
         <div
           className="
@@ -59,11 +82,15 @@ export function StatsCard({
             rounded-2xl
             bg-[var(--accent)]/10
             text-[var(--accent)]
+            transition-all
+            duration-300
+            group-hover:scale-110
+            group-hover:bg-[var(--accent)]
+            group-hover:text-white
           "
         >
           {icon}
         </div>
-
       </div>
     </div>
   );

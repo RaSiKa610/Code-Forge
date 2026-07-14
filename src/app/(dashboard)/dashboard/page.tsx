@@ -7,6 +7,7 @@ import {
   StatsCard,
   WeeklyActivity,
   RecentActivity,
+  QuickActions,
 } from "@/components/dashboard";
 
 import { Flame, Coins, Trophy } from "lucide-react";
@@ -79,6 +80,9 @@ export default async function DashboardPage() {
           activities={dashboard.recentActivity}
         />
 
+      </section>
+      <section className="grid gap-6">
+        <QuickActions />
       </section>
     </div>
   );
