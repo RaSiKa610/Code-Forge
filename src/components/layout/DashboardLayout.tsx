@@ -14,10 +14,10 @@ export function DashboardLayout({
   user,
 }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-[var(--background)]">
+    <div className="flex h-screen overflow-hidden bg-[var(--background)]">
       <Sidebar user={user} />
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col overflow-hidden">
         <Topbar user={user} />
 
         <main className="flex-1 overflow-y-auto p-8">
