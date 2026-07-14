@@ -1,24 +1,51 @@
 import { Card } from "@/components/ui/Card";
 
-export default function ProfileStats({ profile }: { profile: any }) {
+type Props = {
+  profile: any;
+};
+
+export default function ProfileStats({ profile }: Props) {
+  const stats = [
+    {
+      label: "Followers",
+      value: profile.followersCount,
+    },
+    {
+      label: "Following",
+      value: profile.followingCount,
+    },
+    {
+      label: "Friends",
+      value: profile.friendsCount,
+    },
+    {
+      label: "Solved",
+      value: profile.solvedProblems,
+    },
+    {
+      label: "Acceptance",
+      value: `${profile.acceptanceRate}%`,
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <Card className="text-center">
-        <p className="text-[var(--muted)] text-sm">Solved Problems</p>
-        <p className="text-2xl font-bold mt-1">{profile.solvedProblems}</p>
-      </Card>
-      <Card className="text-center">
-        <p className="text-[var(--muted)] text-sm">Acceptance Rate</p>
-        <p className="text-2xl font-bold mt-1">{profile.acceptanceRate}%</p>
-      </Card>
-      <Card className="text-center">
-        <p className="text-[var(--muted)] text-sm">Followers</p>
-        <p className="text-2xl font-bold mt-1">{profile.followersCount}</p>
-      </Card>
-      <Card className="text-center">
-        <p className="text-[var(--muted)] text-sm">Following</p>
-        <p className="text-2xl font-bold mt-1">{profile.followingCount}</p>
-      </Card>
-    </div>
+    <Card>
+      <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="text-center"
+          >
+            <p className="text-3xl font-bold">
+              {stat.value}
+            </p>
+
+            <p className="text-sm text-gray-400">
+              {stat.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </Card>
   );
 }

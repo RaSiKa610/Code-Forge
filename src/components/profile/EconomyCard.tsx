@@ -1,15 +1,32 @@
 import { Card } from "@/components/ui/Card";
 
-export default function EconomyCard({ profile }: { profile: any }) {
+type Props = {
+  profile: any;
+};
+
+export default function EconomyCard({
+  profile,
+}: Props) {
   return (
-    <Card className="flex items-center justify-between">
-      <div>
-        <p className="text-[var(--muted)] text-sm">Forge Coins</p>
-        <p className="text-xl font-bold mt-1 text-yellow-400">{profile.forgeCoins} 🪙</p>
-      </div>
-      <div>
-        <p className="text-[var(--muted)] text-sm">Streak</p>
-        <p className="text-xl font-bold mt-1 text-orange-400">🔥 {profile.currentStreak} Days</p>
+    <Card>
+      <h2 className="mb-4 text-xl font-bold">
+        Economy
+      </h2>
+
+      <div className="space-y-3">
+        <div className="flex justify-between">
+          <span>Forge Coins</span>
+          <span>
+            🪙 {profile.forgeCoins}
+          </span>
+        </div>
+
+        <div className="flex justify-between">
+          <span>Season Points</span>
+          <span>
+            ⭐ {profile.seasonPoints}
+          </span>
+        </div>
       </div>
     </Card>
   );

@@ -1,24 +1,61 @@
 import { Card } from "@/components/ui/Card";
 
-export default function AchievementSection({ profile }: { profile: any }) {
+type Props = {
+  profile: any;
+};
+
+export default function AchievementSection({
+  profile,
+}: Props) {
   return (
     <Card>
-      <h3 className="text-lg font-bold mb-4">Achievements</h3>
-      {profile.achievements && profile.achievements.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {profile.achievements.map((item: any) => (
-            <div key={item.id} className="flex items-center gap-3 p-3 rounded-xl bg-[var(--panel-2)] border border-white/5">
-              <span className="text-2xl">{item.achievement.emoji}</span>
-              <div>
-                <p className="font-semibold text-sm">{item.achievement.name}</p>
-                <p className="text-[var(--muted)] text-xs">{item.achievement.description}</p>
+      <h2 className="mb-4 text-xl font-bold">
+        Achievements
+      </h2>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+        {profile.achievements.length === 0 && (
+          <p>
+            No achievements unlocked yet.
+          </p>
+        )}
+
+        {profile.achievements.map(
+          (item: any) => (
+            <div
+              key={item.id}
+              className="
+                rounded-xl
+                border
+                border-white/10
+                p-4
+              "
+            >
+              <div className="text-3xl">
+                {
+                  item.achievement
+                    .emoji
+                }
               </div>
+
+              <h3 className="mt-2 font-bold">
+                {
+                  item.achievement
+                    .name
+                }
+              </h3>
+
+              <p className="text-sm text-gray-400">
+                {
+                  item.achievement
+                    .description
+                }
+              </p>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-[var(--muted)]">No achievements unlocked yet.</p>
-      )}
+          )
+        )}
+      </div>
     </Card>
   );
 }

@@ -1,15 +1,38 @@
 import { Card } from "@/components/ui/Card";
 
-export default function RankCard({ profile }: { profile: any }) {
+type Props = {
+  profile: any;
+};
+
+export default function RankCard({
+  profile,
+}: Props) {
   return (
-    <Card className="flex items-center justify-between">
-      <div>
-        <p className="text-[var(--muted)] text-sm">Contest Rating</p>
-        <p className="text-2xl font-bold mt-1">{profile.contestRating}</p>
-      </div>
-      <div>
-        <p className="text-[var(--muted)] text-sm">Rank Tier</p>
-        <p className="text-2xl font-bold mt-1 text-[var(--accent)]">{profile.rank}</p>
+    <Card>
+      <h2 className="mb-4 text-xl font-bold">
+        Rank Information
+      </h2>
+
+      <div className="space-y-3">
+        <div className="flex justify-between">
+          <span>Rank</span>
+          <span>{profile.rank}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span>Power Score</span>
+          <span>{profile.powerScore}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span>Contest Rating</span>
+          <span>{profile.contestRating}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span>Open To Work</span>
+          <span>{profile.openToWork}</span>
+        </div>
       </div>
     </Card>
   );

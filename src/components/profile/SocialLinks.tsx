@@ -1,36 +1,54 @@
 import { Card } from "@/components/ui/Card";
 
-export default function SocialLinks({ profile }: { profile: any }) {
+type Props = {
+  profile: any;
+};
+
+export default function SocialLinks({
+  profile,
+}: Props) {
   return (
     <Card>
-      <h3 className="text-lg font-bold mb-4">Social Links</h3>
-      <div className="space-y-2">
+      <h2 className="mb-4 text-xl font-bold">
+        Social Links
+      </h2>
+
+      <div className="space-y-3">
+
+        {profile.location && (
+          <p>
+            📍 {profile.location}
+          </p>
+        )}
+
         {profile.website && (
-          <div>
-            <span className="text-[var(--muted)]">Website: </span>
-            <a href={profile.website} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:underline">
-              {profile.website}
-            </a>
-          </div>
+          <a
+            href={profile.website}
+            target="_blank"
+            className="block text-blue-400"
+          >
+            🌐 {profile.website}
+          </a>
         )}
+
         {profile.githubUsername && (
-          <div>
-            <span className="text-[var(--muted)]">GitHub: </span>
-            <a href={`https://github.com/${profile.githubUsername}`} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:underline">
-              {profile.githubUsername}
-            </a>
-          </div>
+          <a
+            href={`https://github.com/${profile.githubUsername}`}
+            target="_blank"
+            className="block text-blue-400"
+          >
+            🐙 {profile.githubUsername}
+          </a>
         )}
+
         {profile.linkedinUrl && (
-          <div>
-            <span className="text-[var(--muted)]">LinkedIn: </span>
-            <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:underline">
-              {profile.linkedinUrl}
-            </a>
-          </div>
-        )}
-        {!profile.website && !profile.githubUsername && !profile.linkedinUrl && (
-          <p className="text-[var(--muted)]">No social links added yet.</p>
+          <a
+            href={profile.linkedinUrl}
+            target="_blank"
+            className="block text-blue-400"
+          >
+            💼 LinkedIn
+          </a>
         )}
       </div>
     </Card>
