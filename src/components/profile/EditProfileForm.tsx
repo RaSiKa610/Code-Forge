@@ -36,7 +36,9 @@ export default function EditProfileForm({
     });
 
     if (!response.ok) {
-      throw new Error("Upload failed");
+      const errorText = await response.text();
+      console.error("Upload error details:", errorText);
+      throw new Error(errorText || "Upload failed");
     }
 
     const data = await response.json();
