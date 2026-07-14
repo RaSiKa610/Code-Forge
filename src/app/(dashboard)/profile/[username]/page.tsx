@@ -1,47 +1,60 @@
-import { notFound } from "next/navigation";
-import { getProfile } from "@/services/profile/getProfile";
+"use client";
+
+import { use, useEffect, useState } from "react";
+
 import ProfileHeader from "@/components/profile/ProfileHeader";
+import ProfileStats from "@/components/profile/ProfileStats";
+import RankCard from "@/components/profile/RankCard";
+import ActivityCard from "@/components/profile/ActivityCard";
+import EconomyCard from "@/components/profile/EconomyCard";
+import SocialLinks from "@/components/profile/SocialLinks";
+import AchievementSection from "@/components/profile/AchievementSection";
 
-export default async function ProfilePage(props: {
-  params: Promise<{ username: string }>;
+export default function ProfilePage({
+  params,
+}: {
+  params: Promise<{
+    username: string;
+  }>;
 }) {
-  const { username } = await props.params;
-  const user = await getProfile(username);
+  const { username } = use(params);
 
-  if (!user) {
-    notFound();
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/profile/${username}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProfile(data);
+        setLoading(false);
+      });
+  }, [username]);
+
+  if (loading) {
+    return <div className="p-8 text-[var(--muted)]">Loading...</div>;
+  }
+
+  if (!profile || profile.error) {
+    return <div className="p-8 text-[var(--muted)]">User not found</div>;
   }
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
-      <ProfileHeader user={user} />
+    <div className="space-y-6 max-w-5xl mx-auto p-6">
+      <ProfileHeader user={profile} />
+
+      <ProfileStats profile={profile} />
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
-          <div className="rounded-xl border border-white/10 bg-[var(--panel)] p-6">
-            <h2 className="text-xl font-bold mb-4">About</h2>
-            <p className="text-[var(--text)] whitespace-pre-wrap">
-              {user.bio || "No bio added yet."}
-            </p>
-          </div>
+          <ActivityCard profile={profile} />
+          <AchievementSection profile={profile} />
         </div>
+
         <div className="space-y-6">
-          <div className="rounded-xl border border-white/10 bg-[var(--panel)] p-6">
-            <h2 className="text-xl font-bold mb-4">Stats</h2>
-            <div className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-[var(--muted)]">Solved Problems</span>
-                <span className="font-semibold">{user.solvedProblemsCount}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[var(--muted)]">Submissions</span>
-                <span className="font-semibold">{user.totalSubmissions}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[var(--muted)]">Acceptance Rate</span>
-                <span className="font-semibold">{user.acceptanceRate}%</span>
-              </div>
-            </div>
-          </div>
+          <RankCard profile={profile} />
+          <EconomyCard profile={profile} />
+          <SocialLinks profile={profile} />
         </div>
       </div>
     </div>
