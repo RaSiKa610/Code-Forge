@@ -91,6 +91,7 @@ model User {
   communityMemberships CommunityMember[]
   sentBattles   Battle[]  @relation("BattleChallenger")
   receivedBattles Battle[] @relation("BattleOpponent")
+  wonBattles    Battle[]  @relation("BattleWinner")
   vaultNotes    VaultNote[]
   streakLogs    StreakLog[]
   achievements  UserAchievement[]
@@ -241,6 +242,7 @@ model Battle {
 
   challenger User @relation("BattleChallenger", fields: [challengerId], references: [id])
   opponent   User @relation("BattleOpponent",   fields: [opponentId],   references: [id])
+  winner     User? @relation("BattleWinner", fields: [winnerId], references: [id])
 }
 
 enum BattleStatus {
