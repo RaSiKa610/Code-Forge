@@ -58,7 +58,7 @@ export const navigation: readonly NavigationItem[] = [
   {
     id: "settings",
     label: "Settings",
-    href: "/settings",
+    href: "/settings/profile",
     icon: Settings,
   },
 ] as const;
