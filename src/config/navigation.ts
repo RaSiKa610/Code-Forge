@@ -8,6 +8,7 @@ import {
   Users,
   User,
   Settings,
+  UserPlus,
 } from "lucide-react";
 
 export interface NavigationItem {
@@ -23,6 +24,12 @@ export const navigation: readonly NavigationItem[] = [
     label: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    id: "connections",
+    label: "Connections",
+    href: "/connections",
+    icon: UserPlus,
   },
   {
     id: "analytics",

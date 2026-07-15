@@ -40,7 +40,7 @@ export function UserMenu({ user }: UserMenuProps) {
       "
     >
       <Link
-        href="/profile"
+        href={`/profile/${user.username}`}
         className="flex flex-1 cursor-pointer items-center gap-3"
       >
         <Avatar
