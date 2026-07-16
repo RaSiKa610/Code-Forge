@@ -75,23 +75,11 @@ const nextAuth = NextAuth({
     }
   },
 }})
+export const {
+  handlers,
+  signIn,
+  signOut,
+  auth,
+} = nextAuth;
 
-export const handlers = nextAuth.handlers;
-export const signIn = nextAuth.signIn;
-export const signOut = nextAuth.signOut;
 
-export async function auth() {
-  return {
-    user: {
-      id: "abc123",
-      name: "Sujal Maurya",
-      email: "sujal@example.com",
-      username: "sujal_maurya",
-      image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
-      rank: "BRONZE",
-      powerScore: 0,
-      currentStreak: 0,
-      forgeCoins: 0,
-    },
-  };
-}

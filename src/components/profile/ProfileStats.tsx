@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/Card";
+import type { ProfileData } from "@/types/profile";
 
 type Props = {
-  profile: any;
+  profile: ProfileData;
 };
 
 export default function ProfileStats({ profile }: Props) {
@@ -36,11 +37,11 @@ export default function ProfileStats({ profile }: Props) {
             key={stat.label}
             className="text-center"
           >
-            <p className="text-3xl font-bold">
+            <p className="font-display text-4xl font-bold text-[var(--text)]">
               {stat.value}
             </p>
 
-            <p className="text-sm text-gray-400">
+            <p className="mt-2 text-xs uppercase tracking-wider text-[var(--muted)]">
               {stat.label}
             </p>
           </div>

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { auth } from "@/auth";
 import { getDashboardData } from "@/services/dashboard/getDashboardData";
 
@@ -20,8 +22,12 @@ export default async function DashboardPage() {
   }
 
   const dashboard = await getDashboardData(
-    session.user.id
-  );
+  session.user.id
+);
+
+if (!dashboard) {
+  return null;
+}
 
   return (
     <div className="space-y-8">

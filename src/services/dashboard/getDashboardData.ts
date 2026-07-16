@@ -38,67 +38,111 @@ export interface DashboardData {
 
 export async function getDashboardData(
   userId: string
-): Promise<DashboardData> {
+): Promise<DashboardData | null> {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
     },
+
     select: {
       currentStreak: true,
       forgeCoins: true,
       rank: true,
+
+      submissions: {
+        where: {
+          status: "ACCEPTED",
+        },
+
+        orderBy: {
+          createdAt: "desc",
+        },
+
+        take: 5,
+
+        include: {
+          problem: {
+            select: {
+              title: true,
+            },
+          },
+        },
+      },
     },
   });
 
   if (!user) {
-    throw new Error("User not found");
+    return null;
   }
+
+  const recentActivity = user.submissions.map(
+    (submission) => ({
+      id: submission.id,
+      title: `Solved ${submission.problem.title}`,
+      reward: "+50 XP",
+      time: formatTimeAgo(submission.createdAt),
+    })
+  );
 
   return {
     user: {
-        currentStreak: user.currentStreak,
-        forgeCoins: user.forgeCoins,
-        rank: user.rank,
+      currentStreak: user.currentStreak,
+      forgeCoins: user.forgeCoins,
+      rank: user.rank,
     },
 
+    // TODO: Replace with real recommendation
     dailyChallenge: {
-        title: "Binary Search",
-        difficulty: "Medium",
-        xp: 80,
-        forgeCoins: 25,
-        estimatedTime: "18 min",
+      title: "Binary Search",
+      difficulty: "Medium",
+      xp: 80,
+      forgeCoins: 25,
+      estimatedTime: "18 min",
     },
 
+    // TODO: Replace with latest unfinished problem
     continueLearning: {
-        title: "Binary Tree Maximum Path Sum",
-        difficulty: "Hard",
-        progress: 63,
-        estimatedTime: "21 min",
+      title: "Binary Tree Maximum Path Sum",
+      difficulty: "Hard",
+      progress: 63,
+      estimatedTime: "21 min",
     },
+
+    // TODO: Replace with StreakLog data
     weeklyActivity: {
-        solved: 14,
-        hours: 11,
-        activity: [80, 60, 100, 40, 75, 90, 65],
+      solved: 14,
+      hours: 11,
+      activity: [80, 60, 100, 40, 75, 90, 65],
     },
-    recentActivity: [
-      {
-        id: "1",
-        title: "Solved Two Sum",
-        reward: "+50 XP",
-        time: "2 min ago",
-      },
-      {
-        id: "2",
-        title: "Won a 1v1 Battle",
-        reward: "+120 XP",
-        time: "1 hour ago",
-      },
-      {
-        id: "3",
-        title: "Maintained 7-Day Streak",
-        reward: "+20 Forge Coins",
-        time: "Yesterday",
-      },
-    ],
+
+    recentActivity,
   };
+}
+
+function formatTimeAgo(date: Date) {
+  const diff = Date.now() - date.getTime();
+
+  const minutes = Math.floor(diff / 60000);
+
+  if (minutes < 1) {
+    return "Just now";
+  }
+
+  if (minutes < 60) {
+    return `${minutes} min ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+
+  if (hours < 24) {
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+
+  if (days === 1) {
+    return "Yesterday";
+  }
+
+  return `${days} days ago`;
 }

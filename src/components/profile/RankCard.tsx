@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/Card";
+import type { ProfileData } from "@/types/profile";
 
 type Props = {
-  profile: any;
+  profile: ProfileData  ;
 };
 
 export default function RankCard({

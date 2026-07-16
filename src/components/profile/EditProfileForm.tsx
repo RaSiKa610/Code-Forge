@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import type { ProfileData } from "@/types/profile";
 
 export default function EditProfileForm({
   profile,
 }: {
-  profile: any;
+  profile: ProfileData;
 }) {
   const [form, setForm] =
     useState({

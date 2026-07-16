@@ -10,7 +10,11 @@ export async function getProfile(username: string) {
       followers: true,
       following: true,
 
-      submissions: true,
+      submissions: {
+        include: {
+          problem: true,
+        },
+      },
 
       achievements: {
         include: {
@@ -28,52 +32,81 @@ export async function getProfile(username: string) {
     return null;
   }
 
-  const acceptedSubmissions =
-    user.submissions.filter(
-      (submission) =>
-        submission.status === "ACCEPTED"
-    );
+  const acceptedSubmissions = user.submissions.filter(
+    (submission) =>
+      submission.status === "ACCEPTED"
+  );
 
-  const solvedProblems =
-    new Set(
-      acceptedSubmissions.map(
-        (submission) =>
-          submission.problemId
-      )
-    );
+  const solvedProblems = new Set(
+    acceptedSubmissions.map(
+      (submission) => submission.problemId
+    )
+  );
 
-  const easySolved = 0;
-  const mediumSolved = 0;
-  const hardSolved = 0;
+  const easySolved = acceptedSubmissions.filter(
+    (submission) =>
+      submission.problem.difficulty === "EASY"
+  ).length;
+
+  const mediumSolved = acceptedSubmissions.filter(
+    (submission) =>
+      submission.problem.difficulty === "MEDIUM"
+  ).length;
+
+  const hardSolved = acceptedSubmissions.filter(
+    (submission) =>
+      submission.problem.difficulty === "HARD"
+  ).length;
 
   const battlesPlayed =
     user.sentBattles.length +
     user.receivedBattles.length;
 
-  const wins =
-    user.wonBattles.length;
+  const wins = user.wonBattles.length;
 
-  const losses =
-    battlesPlayed - wins;
+  const losses = battlesPlayed - wins;
+
+  const followersCount = user.followers.length;
+
+  const followingCount = user.following.length;
+
+  const friendsCount = user.followers.filter(
+    (follower) =>
+      user.following.some(
+        (following) =>
+          following.followingId ===
+          follower.followerId
+      )
+  ).length;
+
+  const totalSubmissions =
+    user.submissions.length;
+
+  const acceptedCount =
+    acceptedSubmissions.length;
+
+  const acceptanceRate =
+    totalSubmissions === 0
+      ? 0
+      : Math.round(
+          (acceptedCount * 100) /
+            totalSubmissions
+        );
+
+  const winRate =
+    battlesPlayed === 0
+      ? 0
+      : Math.round(
+          (wins * 100) /
+            battlesPlayed
+        );
 
   return {
     ...user,
 
-    followersCount:
-      user.followers.length,
-
-    followingCount:
-      user.following.length,
-
-    friendsCount:
-      user.followers.filter(
-        (follower) =>
-          user.following.some(
-            (following) =>
-              following.followingId ===
-              follower.followerId
-          )
-      ).length,
+    followersCount,
+    followingCount,
+    friendsCount,
 
     solvedProblems:
       solvedProblems.size,
@@ -82,31 +115,16 @@ export async function getProfile(username: string) {
     mediumSolved,
     hardSolved,
 
-    totalSubmissions:
-      user.submissions.length,
+    totalSubmissions,
 
     acceptedSubmissions:
-      acceptedSubmissions.length,
+      acceptedCount,
 
-    acceptanceRate:
-      user.submissions.length === 0
-        ? 0
-        : Math.round(
-            (acceptedSubmissions.length *
-              100) /
-            user.submissions.length
-          ),
+    acceptanceRate,
 
     battlesPlayed,
     wins,
     losses,
-
-    winRate:
-      battlesPlayed === 0
-        ? 0
-        : Math.round(
-            (wins * 100) /
-            battlesPlayed
-          ),
+    winRate,
   };
 }
