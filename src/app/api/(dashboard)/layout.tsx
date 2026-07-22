@@ -17,6 +17,7 @@ export default async function Layout({
   return (
     <DashboardLayout
       user={session.user}
+      title="Dashboard"
     >
       {children}
     </DashboardLayout>

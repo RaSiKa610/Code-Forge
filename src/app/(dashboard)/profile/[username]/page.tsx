@@ -32,35 +32,35 @@ export default async function ProfilePage({
   }
 
   const isOwnProfile =
-  session?.user?.username?.toLowerCase() ===
-  username.toLowerCase();
+    session?.user?.username?.toLowerCase() ===
+    username.toLowerCase();
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-6">
 
       <ProfileHeader
-        user={profile}
+        user={profile as any}
         isOwnProfile={isOwnProfile}
       />
 
-      <ProfileStats profile={profile} />
+      <ProfileStats profile={profile as any} />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
 
         <div className="space-y-6 md:col-span-2">
-          <ActivityCard profile={profile} />
+          <ActivityCard profile={profile as any} />
 
           <AchievementSection
-            profile={profile}
+            profile={profile as any}
           />
         </div>
 
         <div className="space-y-6">
-          <RankCard profile={profile} />
+          <RankCard profile={profile as any} />
 
-          <EconomyCard profile={profile} />
+          <EconomyCard profile={profile as any} />
 
-          <SocialLinks profile={profile} />
+          <SocialLinks profile={profile as any} />
         </div>
 
       </div>
