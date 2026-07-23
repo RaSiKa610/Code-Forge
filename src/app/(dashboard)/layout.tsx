@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
@@ -11,12 +12,13 @@ export default async function Layout({
   const session = await auth();
 
   if (!session?.user) {
-    return null;
+    redirect("/login");
   }
 
   return (
     <DashboardLayout
       user={session.user}
+      title="Dashboard"
     >
       {children}
     </DashboardLayout>
